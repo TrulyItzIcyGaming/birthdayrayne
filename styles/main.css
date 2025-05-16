@@ -1,0 +1,51 @@
+:root {
+    --primary: #FFB6C1;
+    --secondary: #89CFF0;
+    --accent: #FFD700;
+    --dark: #2A2356;
+    --light: #FFF9F0;
+    --font-heading: 'Caveat', cursive;
+    --font-body: 'Raleway', sans-serif;
+    --font-special: 'Playfair Display', serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: var(--dark);
+    color: var(--light);
+    font-family: var(--font-body);
+    line-height: 1.8;
+    overflow-x: hidden;
+}
+
+.section {
+    min-height: 100vh;
+    padding: 4rem 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transform: translateY(50px);
+    transition: all 1s ease;
+}
+
+.section.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.header {
+    font-family: var(--font-heading);
+    font-size: 4rem;
+    color: var(--accent);
+    text-align: center;
+    margin: 2rem 0;
+}
+
+/* More styles... */

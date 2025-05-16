@@ -1,0 +1,50 @@
+{
+    "theirName": "Rayne",
+    "yourName": "Brandon",
+    "pronouns": {
+        "they": "they",
+        "them": "them",
+        "their": "their"
+    },
+    "qualities": [
+        "The way you light up any room just by being yourself, like your presence shifts the energy in the best way.",
+        "Your infectious laughter that makes everyone around you smile without even realizing it.",
+        "The genuine compassion you show to people, even in the smallest interactions — it’s something not many people have.",
+        "Your creative mind that constantly sees the world from a perspective no one else can replicate.",
+        "The quiet strength you carry during tough times, even when you don’t think anyone notices — some of us do.",
+        "Your kindness — not just in grand gestures, but in the little things you do that make people feel comfortable and safe.",
+        "The way you make others feel seen, heard, and understood, even if you’re just listening quietly.",
+        "Your ability to stay completely true to who you are, no matter what environment you’re in — it’s inspiring.",
+        "How you manage to brighten someone’s day without even trying, whether it’s through a comment, a look, or your energy.",
+        "The calm and quiet confidence you carry that shows you don’t need to be loud to have impact — you already do.",
+        "The curiosity you have about the world and the way you approach things with both logic and wonder.",
+        "The fact that you don’t need to try to be impressive — being who you are is already more than enough.",
+        "Your sense of humor, which can lift people out of a bad day without you even knowing it.",
+        "The way you bring people together, naturally — you make others feel like they belong.",
+        "Your attention to detail, in both work and people, like you see things others might overlook — and that matters."
+    ],
+    "memories": [
+        "Our late-night conversations",
+        "The Times I Give You Candy",
+        "All The Times You Do Your Hair (always so pretty)"
+    ],
+    "playlist": [
+        {"title": "Your Favorite Song", "artist": "Artist Name", "file": "song1.mp3"}
+    ],
+    "customSections": {
+        "letter": "Poem",
+"poem": "From the day that I first knew you,\nYour heart was pure and kind;\nYour smile was sweet and innocent,\nYour wit was well refined.\n\nThe sparkle in your eyes was keen,\nYour friendship fast and real;\nSoft words were your virtue,\nAnd humor your appeal.\n\nWe grew as friends together,\nWe laughed and shared our dreams;\nAlong the way crush or two,\nWent unrevealed, it seems.\n\nAs years rolled on, our paths were split,\nOur roads went separate ways;\nWe each pursued our interests,\nThat occupied our days.\n\nWe soon forgot our youthful bliss,\nOf tender carefree years;\nWe didn't talk or keep in touch,\nThroughout life's pain and tears.\n\nThen my darkest hour came,\nAnd tried me to my core;\nTo save my heart from ruin,\nI closed and locked the door.\n\nThen out of every nowhere,\nWith precise directed cue;\nAn old familiar smile,\nCame slowly into view.\n\nAlthough much time was gone,\nAnd the die of fate long cast;\nIt was as if we hadn't missed,\nA second of the past.\n\nYou listened with attentive care,\nAnd reassured my mind;\nThat loving hearts are still alive,\nWith purpose and design.\n\nDeep inside I've locked away,\nEmotions yet untold;\nAs time goes on, and bonds grow strong,\nThey will all unfold.\n\nSo thank you, friend, for taking time,\nTo demonstrate your love;\nIt's yet another blessing that,\nI'm undeserving of.",
+        "quotes": [
+        "You make the ordinary feel extraordinary just by being you.",
+        "Some people make the world brighter just by being in it — you're one of them.",
+        "You're the kind of person who leaves a little kindness wherever they go.",
+        "The way you carry yourself quietly inspires more than you know.",
+        "Your presence is proof that a calm heart can still make waves.",
+        "You have a gift for making others feel like they matter — and that's rare.",
+        "There’s a spark in you that doesn’t need to shout to be seen.",
+        "Even on quiet days, you shine in your own way.",
+        "People like you are the reason others still believe in good things.",
+        "You might not always see your impact, but it’s felt deeply."
+        ]
+    }
+}

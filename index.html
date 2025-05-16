@@ -4,23 +4,533 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Celebrating Rayne</title>
-    <link rel="stylesheet" href="styles/main.css">
-    <link rel="stylesheet" href="styles/animations.css">
-    <link rel="stylesheet" href="styles/themes.css">
+    <link rel="icon" href="/icons8-favorite-16.png" type="image/x-icon">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Raleway', Arial, sans-serif;
+            background: #f8f8ff;
+            color: #222;
+            overflow-x: hidden;
+        }
+        #main-container {
+            position: relative;
+            z-index: 2;
+            min-height: 100vh;
+        }
+        .header {
+            font-family: 'Playfair Display', serif;
+            font-size: 3em;
+            text-align: center;
+            margin-top: 2em;
+        }
+        .scroll-prompt {
+            text-align: center;
+            margin-top: 1em;
+            font-family: 'Caveat', cursive;
+            font-size: 1.5em;
+            color: #888;
+        }
+        .heartbeat {
+            animation: heartbeat 1.5s infinite;
+        }
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            10%, 30% { transform: scale(1.1); }
+            20%, 40% { transform: scale(0.95); }
+            50% { transform: scale(1.05); }
+        }
+        #particle-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+        }
+    </style>
     <link href="https://fonts.googleapis.com/css2?family=Caveat&family=Playfair+Display&family=Raleway&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div id="particle-canvas"></div>
+    <div id="cinematic-intro" style="position:fixed;z-index:10000;top:0;left:0;width:100vw;height:100vh;background:#222;display:flex;align-items:center;justify-content:center;flex-direction:column;transition:opacity 1s;opacity:1;">
+        <div id="intro-content" style="color:#fff; text-align:center; font-family:'Playfair Display',serif;">
+            <div style="font-size:2.5em; margin-bottom:0.5em; letter-spacing:0.05em;">✨ For Rayne ✨</div>
+            <div id="intro-lines" style="font-size:1.3em; max-width:600px; margin:0 auto;"></div>
+            <div id="intro-heart" style="font-size:3em; margin-top:1em; opacity:0; transition:opacity 1s;">💜</div>
+            <button id="skip-intro-btn" style="margin-top:2em; padding:0.7em 2em; font-size:1.1em; border-radius:1em; background:#a0a0ff; color:#fff; border:none; cursor:pointer;">Skip Intro</button>
+        </div>
+    </div>
+
+    <canvas id="particle-canvas"></canvas>
     <div id="main-container">
-        <!-- Sections will be dynamically loaded -->
+        <section class="section" id="cover">
+            <h1 class="header heartbeat">For Rayne</h1>
+            <div class="scroll-prompt">▼ Scroll to Begin ▼</div>
+        </section>
     </div>
     
-    <audio id="background-music" loop>
-        <source src="assets/audio/soft-piano.mp3" type="audio/mpeg">
+    <audio id="background-music" loop autoplay>
+        <source src="/rayneSong.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
     </audio>
 
-    <script src="scripts/particles.js"></script>
-    <script src="scripts/interactions.js"></script>
-    <script src="scripts/main.js"></script>
+    <script>
+    const canvas = document.getElementById('particle-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+    function createParticles(num) {
+        particles = [];
+        for (let i = 0; i < num; i++) {
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                r: 1 + Math.random() * 2,
+                dx: -0.5 + Math.random(),
+                dy: -0.5 + Math.random(),
+                alpha: 0.2 + Math.random() * 0.5
+            });
+        }
+    }
+    createParticles(80);
+    function drawParticles() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (let p of particles) {
+            ctx.globalAlpha = p.alpha;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r, 0, 2 * Math.PI);
+            ctx.fillStyle = "#a0a0ff";
+            ctx.fill();
+            p.x += p.dx;
+            p.y += p.dy;
+            if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+            if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+        }
+        ctx.globalAlpha = 1.0;
+        requestAnimationFrame(drawParticles);
+    }
+    drawParticles();
+    </script>
+    <script>
+    window.addEventListener('scroll', function() {
+        const prompt = document.querySelector('.scroll-prompt');
+        if (window.scrollY > 30 && prompt) {
+            prompt.style.opacity = '0';
+        } else if (prompt) {
+            prompt.style.opacity = '1';
+        }
+    });
+    </script>
+    <script>
+    // Cinematic intro sequence (extra slow, with special message)
+    const introLines = [
+        "Sometimes, someone comes into your life and everything changes.",
+        "The world feels a little brighter, the days a little lighter.",
+        "This is for you, Rayne.",
+        "Because you deserve to feel celebrated, loved, and seen.",
+        "Happy Birthday!",
+        "This took me a really long time, but it was worth it for you!"
+    ];
+    let introStep = 0;
+
+    function showNextIntroLine() {
+        const linesDiv = document.getElementById('intro-lines');
+        if (introStep < introLines.length) {
+            linesDiv.innerHTML = `<span style="opacity:0;transition:opacity 1.2s;" id="intro-line">${introLines[introStep]}</span>`;
+            setTimeout(() => {
+                document.getElementById('intro-line').style.opacity = 1;
+            }, 200);
+            // Make the last line stay much longer
+            let delay = (introStep === introLines.length - 1) ? 7000 : 3500;
+            introStep++;
+            setTimeout(showNextIntroLine, delay);
+        } else {
+            // Show heart, then fade out intro
+            document.getElementById('intro-heart').style.opacity = 1;
+            setTimeout(() => {
+                document.getElementById('cinematic-intro').style.opacity = 0;
+                setTimeout(() => {
+                    document.getElementById('cinematic-intro').style.display = 'none';
+                }, 1800);
+            }, 2500);
+        }
+    }
+
+    // Prevent scrolling during intro
+    document.body.style.overflow = "hidden";
+    window.addEventListener('DOMContentLoaded', function() {
+        setTimeout(() => {
+            showNextIntroLine();
+            setTimeout(() => {
+                document.body.style.overflow = "";
+            }, 26000); // Extended to match the longer intro
+        }, 600);
+    });
+
+    // Add skip functionality
+    document.getElementById('skip-intro-btn').onclick = function() {
+        document.getElementById('cinematic-intro').style.opacity = 0;
+        setTimeout(() => {
+            document.getElementById('cinematic-intro').style.display = 'none';
+            document.body.style.overflow = "";
+        }, 800);
+    };
+    </script>
+    <script>
+    // Optional: Play music automatically and handle user interaction for autoplay policies
+    window.addEventListener('DOMContentLoaded', function() {
+        const music = document.getElementById('background-music');
+        // Try to play immediately (may be blocked by browser)
+        if (music) {
+            music.volume = 0.5;
+            music.play().catch(() => {
+                // If blocked, play on first user interaction
+                const resumeMusic = () => {
+                    music.play();
+                    window.removeEventListener('click', resumeMusic);
+                };
+                window.addEventListener('click', resumeMusic);
+            });
+        }
+    });
+    </script>
+    <script>
+
+    function populateQualities() {
+        const qualities = [
+            "You light up every room you enter.",
+            "Your kindness inspires me every day.",
+            "You make even ordinary moments magical.",
+            "Your laughter is my favorite sound.",
+            "You are strong, creative, and so loved.",
+            "You make the world a better place just by being in it.",
+            "You inspire me to be my best self.",
+            "You are my favorite hello and my hardest goodbye."
+        ];
+        const section = document.createElement('section');
+        section.className = 'section';
+        section.innerHTML = `
+            <h2 style="text-align:center; margin-top:2em;">What I Love About You</h2>
+            <ul style="max-width:500px; margin:2em auto; font-size:1.2em; line-height:1.6;">
+                ${qualities.map(q => `<li>❤️ ${q}</li>`).join('')}
+            </ul>
+            <div style="text-align:center; margin:2em;">
+                <button id="show-surprise" style="padding:0.7em 2em; font-size:1.1em; border-radius:1em; background:#a0a0ff; color:#fff; border:none; cursor:pointer;">Click for a Surprise!</button>
+                <div id="surprise-message" style="display:none; margin-top:1.5em; font-size:1.3em; color:#5a5aee;"></div>
+            </div>
+        `;
+        document.getElementById('main-container').appendChild(section);
+
+        document.getElementById('show-surprise').onclick = function() {
+            const messages = [
+                "You are loved more than you know 💜",
+                "You make every day brighter 🌟",
+                "You are my favorite person to talk to 😊",
+                "You are the reason for so many smiles!",
+                "You are truly one of a kind."
+            ];
+            const msg = messages[Math.floor(Math.random() * messages.length)];
+            const surprise = document.getElementById('surprise-message');
+            surprise.textContent = msg;
+            surprise.style.display = 'block';
+        };
+    }
+
+    function buildTimeline() {
+        const memories = [
+            { date: "May 2", text: "My birthday" },
+            { date: "The Day We Met", text: "A moment that changed my life forever." },
+            { date: "Many Calls", text: "Every call with you is my favorite." },
+            { date: "Countless Laughs", text: "Thank you for every smile and every giggle." },
+            { date: "May 17", text: "Your birthday! The world got a little brighter." }
+        ];
+        const section = document.createElement('section');
+        section.className = 'section';
+        section.innerHTML = `
+            <h2 style="text-align:center; margin-top:2em;">Our Journey</h2>
+            <div style="max-width:600px; margin:2em auto;">
+                ${memories.map(m => `
+                    <div style="margin-bottom:1.5em; border-left:4px solid #a0a0ff; padding-left:1em;">
+                        <strong>${m.date}:</strong>
+                        <span>${m.text}</span>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+        document.getElementById('main-container').appendChild(section);
+    }
+
+    function showPoem() {
+        const poem = `
+            <h2 style="text-align:center; margin-top:2em;">A Poem For You</h2>
+            <div style="max-width:600px; margin:2em auto; background:#f0f4ff; border-radius:1em; padding:2em; font-size:1.15em; box-shadow:0 2px 12px #e0e0ff;">
+                <em>
+                "However the Road Unfolds"<br><br>
+                I don’t know where the future leads,<br>
+                Or what the days may bring,<br>
+                But in the quiet thoughts I keep,<br>
+                You’re always in the ring.<br><br>
+                Not for love that rushes fast,<br>
+                Or dreams too far to chase,<br>
+                But for the way your presence feels<br>
+                Like calm in open space.<br><br>
+                I care in ways I rarely say,<br>
+                In moments tucked away —<br>
+                A glance, a laugh, a shared idea,<br>
+                The brightness in your day.<br><br>
+                I hope you're part of what’s ahead,<br>
+                In friendship, or in more;<br>
+                A constant name I get to know,<br>
+                One I’m still rooting for.<br><br>
+                So here’s to all the time to come,<br>
+                No need to write the end —<br>
+                I simply hope, in some small way,<br>
+                You’ll always call me friend.
+                </em>
+            </div>
+            <div style="text-align:center; margin-bottom:2em;">
+                <button id="poem-reaction-btn" style="padding:0.5em 1.5em; font-size:1em; border-radius:1em; background:#a0a0ff; color:#fff; border:none; cursor:pointer;">How did this make you feel?</button>
+                <div id="poem-reaction" style="margin-top:1em; font-size:1.2em; color:#5a5aee;"></div>
+            </div>
+        `;
+        const section = document.createElement('section');
+        section.className = 'section';
+        section.innerHTML = poem;
+        document.getElementById('main-container').appendChild(section);
+
+        section.querySelector('#poem-reaction-btn').onclick = function() {
+            const reactions = [
+                "😊 Warm and fuzzy!",
+                "😭 Touched my heart.",
+                "😍 I feel so loved.",
+                "🥹 That was beautiful.",
+                "💜 Thank you for sharing this with me."
+            ];
+            const reaction = reactions[Math.floor(Math.random() * reactions.length)];
+            section.querySelector('#poem-reaction').textContent = reaction;
+        };
+    }
+
+    
+    function initBirthdayCountdown() {
+        const now = new Date();
+        let year = now.getFullYear();
+        let nextBirthday = new Date(year, 4, 17);
+        if (now > nextBirthday) nextBirthday = new Date(year + 1, 4, 17);
+
+        const section = document.createElement('section');
+        section.className = 'section';
+        section.innerHTML = `
+            <h2 style="text-align:center; margin-top:2em;">Countdown to Your Birthday!</h2>
+            <div id="countdown" style="font-size:2em; text-align:center; margin:1.5em 0; color:#5a5aee;"></div>
+        `;
+        document.getElementById('main-container').appendChild(section);
+
+        function updateCountdown() {
+            const now = new Date();
+            const diff = nextBirthday - now;
+            if (diff <= 0) {
+                document.getElementById('countdown').textContent = "🎉 Happy Birthday, Rayne! 🎉";
+                return;
+            }
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+            const mins = Math.floor((diff / (1000 * 60)) % 60);
+            const secs = Math.floor((diff / 1000) % 60);
+            document.getElementById('countdown').textContent =
+                `${days} days, ${hours} hours, ${mins} minutes, ${secs} seconds`;
+        }
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+    }
+
+    function addQuiz() {
+        const questions = [
+            {
+                q: "What is my favorite thing about you?",
+                options: [
+                    "Your kindness",
+                    "Your smile",
+                    "Your creativity",
+                    "All of the above"
+                ],
+                answer: 3
+            },
+            {
+                q: "When is your birthday?",
+                options: [
+                    "May 2",
+                    "May 17",
+                    "June 1",
+                    "December 25"
+                ],
+                answer: 1
+            },
+            {
+                q: "What would I wish for on my birthday?",
+                options: [
+                    "More adventures with you",
+                    "A puppy",
+                    "A new car",
+                    "A trip to the moon"
+                ],
+                answer: 0
+            }
+        ];
+        let current = 0;
+        let score = 0;
+
+        const section = document.createElement('section');
+        section.className = 'section';
+        section.innerHTML = `
+            <h2 style="text-align:center; margin-top:2em;">A Little Quiz For You!</h2>
+            <div id="quiz-container" style="max-width:500px; margin:2em auto; font-size:1.1em;"></div>
+        `;
+        document.getElementById('main-container').appendChild(section);
+
+        function showQuestion() {
+            if (current >= questions.length) {
+                document.getElementById('quiz-container').innerHTML =
+                    `<div style="text-align:center; font-size:1.3em; color:#5a5aee;">
+                        Quiz complete! You got ${score} out of ${questions.length} right.<br>
+                        <span style="font-size:2em;">🎉</span>
+                    </div>`;
+                return;
+            }
+            const q = questions[current];
+            document.getElementById('quiz-container').innerHTML = `
+                <div style="margin-bottom:1em;"><strong>${q.q}</strong></div>
+                ${q.options.map((opt, i) =>
+                    `<button class="quiz-opt" data-idx="${i}" style="margin:0.3em 0.5em; padding:0.5em 1em; border-radius:0.7em; border:none; background:#e0e0ff; color:#333; cursor:pointer;">${opt}</button>`
+                ).join('')}
+                <div id="quiz-feedback" style="margin-top:1em; min-height:1.5em;"></div>
+            `;
+            Array.from(document.getElementsByClassName('quiz-opt')).forEach(btn => {
+                btn.onclick = function() {
+                    const idx = parseInt(btn.getAttribute('data-idx'));
+                    if (idx === q.answer) {
+                        score++;
+                        document.getElementById('quiz-feedback').textContent = "Correct! 😊";
+                    } else {
+                        document.getElementById('quiz-feedback').textContent = "That's okay! The real answer is: " + q.options[q.answer];
+                    }
+                    setTimeout(() => {
+                        current++;
+                        showQuestion();
+                    }, 1200);
+                };
+            });
+        }
+        showQuestion();
+    }
+
+        function addFortuneCookie() {
+        const fortunes = [
+            "You will have a day full of laughter and love.",
+            "Someone is thinking of you right now (hint: it's me!).",
+            "A wonderful surprise is on its way to you.",
+            "You are the sunshine in someone's cloudy day.",
+            "Your kindness will come back to you tenfold.",
+            "You are about to make a beautiful memory.",
+            "You are more loved than you realize.",
+            "A new adventure is just around the corner."
+        ];
+        const section = document.createElement('section');
+        section.className = 'section';
+        section.innerHTML = `
+            <h2 style="text-align:center; margin-top:2em;">Open Your Fortune Cookie!</h2>
+            <div style="text-align:center; margin:2em;">
+                <button id="fortune-btn" style="padding:0.7em 2em; font-size:1.1em; border-radius:1em; background:#ffd580; color:#a05a00; border:none; cursor:pointer;">Crack the Cookie 🥠</button>
+                <div id="fortune-message" style="display:none; margin-top:1.5em; font-size:1.3em; color:#a05a00;"></div>
+            </div>
+        `;
+        document.getElementById('main-container').appendChild(section);
+
+        document.getElementById('fortune-btn').onclick = function() {
+            const msg = fortunes[Math.floor(Math.random() * fortunes.length)];
+            const fortune = document.getElementById('fortune-message');
+            fortune.textContent = msg;
+            fortune.style.display = 'block';
+        };
+    }
+
+    function addComplimentGenerator() {
+        const compliments = [
+            "You have the best laugh.",
+            "You make the world a better place.",
+            "You are so thoughtful and caring.",
+            "You inspire everyone around you.",
+            "You have a heart of gold.",
+            "You are a true original.",
+            "You make every day brighter.",
+            "You are simply amazing."
+        ];
+        const section = document.createElement('section');
+        section.className = 'section';
+        section.innerHTML = `
+            <h2 style="text-align:center; margin-top:2em;">Need a Compliment?</h2>
+            <div style="text-align:center; margin:2em;">
+                <button id="compliment-btn" style="padding:0.7em 2em; font-size:1.1em; border-radius:1em; background:#a0ffa0; color:#227722; border:none; cursor:pointer;">Get a Compliment 💬</button>
+                <div id="compliment-message" style="display:none; margin-top:1.5em; font-size:1.3em; color:#227722;"></div>
+            </div>
+        `;
+        document.getElementById('main-container').appendChild(section);
+
+        document.getElementById('compliment-btn').onclick = function() {
+            const msg = compliments[Math.floor(Math.random() * compliments.length)];
+            const compliment = document.getElementById('compliment-message');
+            compliment.textContent = msg;
+            compliment.style.display = 'block';
+        };
+    }
+    function addVirtualHug() {
+        const section = document.createElement('section');
+        section.className = 'section';
+        section.innerHTML = `
+            <h2 style="text-align:center; margin-top:2em;">Need a Hug?</h2>
+            <div style="text-align:center; margin:2em;">
+                <button id="hug-btn" style="padding:0.7em 2em; font-size:1.1em; border-radius:1em; background:#ffb3d1; color:#a03a5a; border:none; cursor:pointer;">Send a Virtual Hug 🤗</button>
+                <div id="hug-message" style="display:none; margin-top:1.5em; font-size:2em; color:#a03a5a;">🤗💜🤗</div>
+            </div>
+        `;
+        document.getElementById('main-container').appendChild(section);
+
+        document.getElementById('hug-btn').onclick = function() {
+            document.getElementById('hug-message').style.display = 'block';
+        };
+    }
+
+    function addFinalMessage() {
+        const section = document.createElement('section');
+        section.className = 'section';
+        section.innerHTML = `
+            <h2 style="text-align:center; margin-top:2em;">One Last Thing...</h2>
+            <div style="max-width:600px; margin:2em auto; font-size:1.2em; text-align:center;">
+                Thank you for being you, Rayne.<br>
+                I hope this made you smile.<br>
+                <span style="font-size:2em; display:block; margin:1em 0;">💜</span>
+                No matter where life takes us, I’ll always be by your side, I really care about you. To many more adventures together, and to the beautiful person you are.<br><br>
+                <strong>Happy Birthday!</strong>
+            </div>
+        `;
+        document.getElementById('main-container').appendChild(section);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        initBirthdayCountdown();
+        populateQualities();
+        buildTimeline();
+        showPoem();
+        addQuiz();
+        addFortuneCookie();
+        addComplimentGenerator();
+        addVirtualHug();
+        addFinalMessage();
+    });
+    </script>
 </body>
 </html>
